@@ -1,0 +1,105 @@
+'use strict';
+
+let images = ['bag.jpg','banana.jpg','bathroom.jpg','boots.jpg','breakfast.jpg','bubblegum.jpg','chair.jpg','cthulhu.jpg','dog-duck.jpg','dragon.jpg','pen.jpg','pet-sweep.jpg','scissors.jpg','shark.jpg','sweep.png','tauntaun.jpg','unicorn.jpg','water-can.jpg','wine-glass.jpg'];
+let conImages = [];
+let totalClicks = 0;
+let number = 25;
+
+function Products(name, url) {
+  this.name = name;
+  this.url = `img/${url}`;
+  this.timesSeen = 0;
+  this.clicks = 0;
+}
+
+function randomNum() {
+  return Math.floor(Math.random() * (images.length));
+}
+
+function render() {
+  let img1 = conImages[randomNum()];
+  img1.timesSeen += 1;
+  let img2 = conImages[randomNum()];
+  img2.timesSeen += 1;
+  let img3 = conImages[randomNum()];
+  img3.timesSeen += 1;
+
+  while (img1 === img2) {
+    img2 = conImages[randomNum()];
+  }
+
+  while (img1 === img3) {
+    img3 = conImages[randomNum()];
+  }
+
+  while (img2 === img3) {
+    img3 = conImages[randomNum()];
+  }
+
+  $('#img1').attr('src', img1.url);
+  $('#img1').attr('name', img1.name);
+  $('#img2').attr('src', img2.url);
+  $('#img2').attr('name', img2.name);
+  $('#img3').attr('src', img3.url);
+  $('#img3').attr('name', img3.name);
+}
+
+for(let i = 0; i < images.length; i++){
+  let modImage = new Products(images[i].slice(0, images[i].length - 4), images[i]);
+  conImages.push(modImage);
+}
+
+render();
+
+$('#img1').click(function(event) {
+  totalClicks++;
+  if (totalClicks <= number){
+    let imgChoice = event.target.name;
+    conImages.forEach(function(img) {
+      if (img.name === imgChoice) {
+        img.clicks++;
+      }
+    });
+    render();
+  }
+  console.log(totalClicks);
+});
+
+
+$('#img2').click(function(event) {
+  totalClicks++;
+  if (totalClicks <= number){
+    let imgChoice = event.target.name;
+    conImages.forEach(function(img) {
+      if (img.name === imgChoice) {
+        img.clicks++;
+      }
+    });
+    render();
+  }
+  console.log(totalClicks);
+});
+
+
+$('#img3').click(function(event) {
+  totalClicks++;
+  if (totalClicks <= number){
+    let imgChoice = event.target.name;
+    conImages.forEach(function(img) {
+      if (img.name === imgChoice) {
+        img.clicks++;
+      }
+    });
+    render();
+  }
+  console.log(totalClicks);
+});
+
+$('#results').click(function(event) {
+  if (totalClicks === number) {
+    for(let i = 0; i < conImages.length; i++)
+      console.log(`${conImages[i].name} had ${conImages[i].clicks} votes, and was seen ${conImages[i].timesSeen} times.`);
+  }
+});
+
+
