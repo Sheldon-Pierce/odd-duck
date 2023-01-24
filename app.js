@@ -53,6 +53,7 @@ render();
 
 $('#img1').click(function(event) {
   totalClicks++;
+  $('#counter').text(`Round ${totalClicks + 1}`);
   if (totalClicks <= number){
     let imgChoice = event.target.name;
     conImages.forEach(function(img) {
@@ -68,6 +69,7 @@ $('#img1').click(function(event) {
 
 $('#img2').click(function(event) {
   totalClicks++;
+  $('#counter').text(`Round ${totalClicks + 1}`);
   if (totalClicks <= number){
     let imgChoice = event.target.name;
     conImages.forEach(function(img) {
@@ -83,7 +85,8 @@ $('#img2').click(function(event) {
 
 $('#img3').click(function(event) {
   totalClicks++;
-  if (totalClicks <= number){
+  $('#counter').text(`Round ${totalClicks + 1}`);
+  if (totalClicks < number){
     let imgChoice = event.target.name;
     conImages.forEach(function(img) {
       if (img.name === imgChoice) {
@@ -95,11 +98,17 @@ $('#img3').click(function(event) {
   console.log(totalClicks);
 });
 
+// if(totalClicks === number) {
+//   $('#counter').
+// }
+
+
 $('#results').click(function(event) {
-  if (totalClicks === number) {
+  console.log(event);
+  if (totalClicks > number) {
     for(let i = 0; i < conImages.length; i++)
-      console.log(`${conImages[i].name} had ${conImages[i].clicks} votes, and was seen ${conImages[i].timesSeen} times.`);
+      $('#listResults').append(`${conImages[i].name} had ${conImages[i].clicks} votes, and was seen ${conImages[i].timesSeen} times.<br>`);
   }
 });
 
-
+$('#counter').text(`Round ${totalClicks + 1}`);
