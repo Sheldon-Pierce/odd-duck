@@ -4,8 +4,8 @@ let images = ['bag.jpg','banana.jpg','bathroom.jpg','boots.jpg','breakfast.jpg',
 let conImages = [];
 let totalClicks = 0;
 let number = 25;
-let prev3 = []
-let current3 = []
+let prev3 = [];
+let current3 = [];
 
 function Products(name, url) {
   this.name = name;
@@ -28,33 +28,49 @@ function render() {
 
   while (img1 === img2) {
     img2 = conImages[randomNum()];
+    // console.log(img2.name);
   }
 
   while (img1 === img3) {
     img3 = conImages[randomNum()];
+    // console.log(img3.name);
   }
 
   while (img2 === img3) {
     img3 = conImages[randomNum()];
+    // console.log(img3.name);
   }
-
-  for(let i = 0; i < prev3.length; i++){
-    while(img1 == prev3[i]){
-      img1 = conImages[randomNum()]
-    }
-    while(img2 == prev3[i]){
-      img2 = conImages[randomNum()]
-    }
-    while(img3 == prev3[i]){
-      img3 = conImages[randomNum()]
-    }
-  }
-
 
   current3.push(img1.name);
   current3.push(img2.name);
   current3.push(img3.name);
+  // console.log(prev3);
+  // console.log(current3);
+  while(checkPrevious(prev3, current3)) {
+    img1 = conImages[randomNum()];
+    img2 = conImages[randomNum()];
+    img3 = conImages[randomNum()];
+    while (img1 === img2) {
+      img2 = conImages[randomNum()];
+      // console.log(img2.name);
+    }
 
+    while (img1 === img3) {
+      img3 = conImages[randomNum()];
+      // console.log(img3.name);
+    }
+
+    while (img2 === img3) {
+      img3 = conImages[randomNum()];
+      // console.log(img3.name);
+    }
+    current3 = [];
+    current3.push(img1.name);
+    current3.push(img2.name);
+    current3.push(img3.name);
+  }
+  // console.log(prev3);
+  // console.log(current3);
   $('#img1').attr('src', img1.url);
   $('#img1').attr('name', img1.name);
   $('#img2').attr('src', img2.url);
@@ -62,6 +78,7 @@ function render() {
   $('#img3').attr('src', img3.url);
   $('#img3').attr('name', img3.name);
 
+  // console.log(prev3, current3);
 }
 
 for(let i = 0; i < images.length; i++){
@@ -81,17 +98,14 @@ $('#img1').on('click', (function(event) {
         img.clicks++;
       }
     });
-    prev3 = []
-    for(let i = 0; i < current3.length; i++){
-      prev3.push(current3[i])
-    }
-    current3 = []
+    prev3 = [...current3];
+    current3 = [];
     render();
   }
-  if (totalClicks == number) {
-    $('#counter').text(`Voting Over, View Results`);
+  if (totalClicks === number) {
+    $('#counter').text('Voting Over, View Results');
   }
-  console.log(totalClicks);
+  // console.log(totalClicks);
 }));
 
 
@@ -105,48 +119,41 @@ $('#img2').on('click', (function(event) {
         img.clicks++;
       }
     });
-    prev3 = []
-    for(let i = 0; i < current3.length; i++){
-      prev3.push(current3[i])
-    current3 = []
+    prev3 = [...current3];
+    current3 = [];
     render();
+    if (totalClicks === number) {
+      $('#counter').text('Voting Over, View Results');
     }
-  if (totalClicks == number) {
-    $('#counter').text(`Voting Over, View Results`);
-  }
-  console.log(totalClicks);
-}}));
+  }}));
 
 
 $('#img3').on('click', (function(event) {
   if (totalClicks < number){
     totalClicks++;
-  $('#counter').text(`Round ${totalClicks + 1}`);
+    $('#counter').text(`Round ${totalClicks + 1}`);
     let imgChoice = event.target.name;
     conImages.forEach(function(img) {
       if (img.name === imgChoice) {
         img.clicks++;
       }
     });
-    prev3 = []
-    for(let i = 0; i < current3.length; i++){
-      prev3.push(current3[i])
-    }
-    current3 = []
+    prev3 = [...current3];
+    current3 = [];
     render();
-  if (totalClicks == number) {
-    $('#counter').text(`Voting Over, View Results`);
-  }
-  console.log(totalClicks);
-}}));
+    if (totalClicks === number) {
+      $('#counter').text('Voting Over, View Results');
+    }
+    // console.log(totalClicks);
+  }}));
 
-let clickData = []
-let viewData = []
-let nameData = []
+let clickData = [];
+let viewData = [];
+let nameData = [];
 
 $('#results').click(function(event) {
   console.log(event);
-  if (totalClicks == number) {
+  if (totalClicks === number) {
     for(let i = 0; i < conImages.length; i++) {
       clickData.push(conImages[i].clicks);
       viewData.push(conImages[i].timesSeen);
@@ -180,7 +187,6 @@ $('#results').click(function(event) {
 
 $('#counter').text(`Round ${totalClicks + 1}`);
 
-// function checkPrevious(firstArr, secondArr) {
-//    firstArr.some(product => secondArr.includes(product));
-// };
-
+function checkPrevious(firstArr, secondArr) {
+  return firstArr.some(product => secondArr.includes(product));
+}
