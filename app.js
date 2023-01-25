@@ -1,4 +1,5 @@
 'use strict';
+let state = null;
 
 let images = ['bag.jpg','banana.jpg','bathroom.jpg','boots.jpg','breakfast.jpg','bubblegum.jpg','chair.jpg','cthulhu.jpg','dog-duck.jpg','dragon.jpg','pen.jpg','pet-sweep.jpg','scissors.jpg','shark.jpg','sweep.png','tauntaun.jpg','unicorn.jpg','water-can.jpg','wine-glass.jpg'];
 let conImages = [];
@@ -26,19 +27,10 @@ function render() {
   let img3 = conImages[randomNum()];
   img3.timesSeen += 1;
 
-  while (img1 === img2) {
+  while (img1 === img2 || img1 === img3 || img2 === img3) {
     img2 = conImages[randomNum()];
+    img3 = conImages[randomNum()];
     // console.log(img2.name);
-  }
-
-  while (img1 === img3) {
-    img3 = conImages[randomNum()];
-    // console.log(img3.name);
-  }
-
-  while (img2 === img3) {
-    img3 = conImages[randomNum()];
-    // console.log(img3.name);
   }
 
   current3.push(img1.name);
@@ -50,20 +42,12 @@ function render() {
     img1 = conImages[randomNum()];
     img2 = conImages[randomNum()];
     img3 = conImages[randomNum()];
-    while (img1 === img2) {
+    while (img1 === img2 || img1 === img3 || img2 === img3) {
       img2 = conImages[randomNum()];
+      img3 = conImages[randomNum()];
       // console.log(img2.name);
     }
 
-    while (img1 === img3) {
-      img3 = conImages[randomNum()];
-      // console.log(img3.name);
-    }
-
-    while (img2 === img3) {
-      img3 = conImages[randomNum()];
-      // console.log(img3.name);
-    }
     current3 = [];
     current3.push(img1.name);
     current3.push(img2.name);
@@ -159,6 +143,8 @@ $('#results').click(function(event) {
       viewData.push(conImages[i].timesSeen);
       nameData.push(conImages[i].name);
     }
+    saveImages(conImages);
+    getImages();
     // Creating the chart
     new Chart($('#chart'), {
       type: 'bar',
@@ -185,8 +171,52 @@ $('#results').click(function(event) {
   }
 });
 
+$('#delete').click(function(){
+  deleteData();
+  window.location.reload();
+});
+
 $('#counter').text(`Round ${totalClicks + 1}`);
 
 function checkPrevious(firstArr, secondArr) {
   return firstArr.some(product => secondArr.includes(product));
 }
+
+let totals = getImages();
+const getInfoStorage = getImages();
+
+if(getInfoStorage){
+  state = getInfoStorage;
+} 
+// Gets images from storage
+function getImages() {
+  let stringData = localStorage.getItem('clickData');
+  // console.log(stringData);
+  return JSON.parse(stringData)
+}
+// save goats into storage
+function saveImages(conImages){
+  let stringifiedImages = [];
+  for(let i = 0; i < conImages.length; i++){
+    stringifiedImages.push(JSON.stringify(conImages[i].clicks));
+    // console.log(stringifiedImages);
+  //stringify data and set it as something into local storage
+  }
+  let newString = JSON.stringify(stringifiedImages);
+  localStorage.setItem('clickData' , newString);
+}
+function deleteData() {
+  localStorage.clear();
+}
+
+console.log(localStorage.clickData)
+
+
+$('#reload').click(function(){
+  window.location.reload()
+})
+
+$('#delete').click(function(){
+  deleteData();
+  window.location.reload();
+});
