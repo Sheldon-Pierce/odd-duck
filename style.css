@@ -33,6 +33,8 @@ main {
 #results {
     margin-top: 50px;
     grid-column: 2/3;
+    width: 100%;
+    
 }
 
 #title {
