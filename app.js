@@ -4,6 +4,8 @@ let images = ['bag.jpg','banana.jpg','bathroom.jpg','boots.jpg','breakfast.jpg',
 let conImages = [];
 let totalClicks = 0;
 let number = 25;
+let prev3 = []
+let current3 = []
 
 function Products(name, url) {
   this.name = name;
@@ -36,12 +38,30 @@ function render() {
     img3 = conImages[randomNum()];
   }
 
+  for(let i = 0; i < prev3.length; i++){
+    while(img1 == prev3[i]){
+      img1 = conImages[randomNum()]
+    }
+    while(img2 == prev3[i]){
+      img2 = conImages[randomNum()]
+    }
+    while(img3 == prev3[i]){
+      img3 = conImages[randomNum()]
+    }
+  }
+
+
+  current3.push(img1.name);
+  current3.push(img2.name);
+  current3.push(img3.name);
+
   $('#img1').attr('src', img1.url);
   $('#img1').attr('name', img1.name);
   $('#img2').attr('src', img2.url);
   $('#img2').attr('name', img2.name);
   $('#img3').attr('src', img3.url);
   $('#img3').attr('name', img3.name);
+
 }
 
 for(let i = 0; i < images.length; i++){
@@ -51,64 +71,116 @@ for(let i = 0; i < images.length; i++){
 
 render();
 
-$('#img1').click(function(event) {
-  totalClicks++;
-  $('#counter').text(`Round ${totalClicks + 1}`);
-  if (totalClicks <= number){
-    let imgChoice = event.target.name;
-    conImages.forEach(function(img) {
-      if (img.name === imgChoice) {
-        img.clicks++;
-      }
-    });
-    render();
-  }
-  console.log(totalClicks);
-});
-
-
-$('#img2').click(function(event) {
-  totalClicks++;
-  $('#counter').text(`Round ${totalClicks + 1}`);
-  if (totalClicks <= number){
-    let imgChoice = event.target.name;
-    conImages.forEach(function(img) {
-      if (img.name === imgChoice) {
-        img.clicks++;
-      }
-    });
-    render();
-  }
-  console.log(totalClicks);
-});
-
-
-$('#img3').click(function(event) {
-  totalClicks++;
-  $('#counter').text(`Round ${totalClicks + 1}`);
+$('#img1').on('click', (function(event) {
   if (totalClicks < number){
+    totalClicks++;
+    $('#counter').text(`Round ${totalClicks + 1}`);
     let imgChoice = event.target.name;
     conImages.forEach(function(img) {
       if (img.name === imgChoice) {
         img.clicks++;
       }
     });
+    prev3 = []
+    for(let i = 0; i < current3.length; i++){
+      prev3.push(current3[i])
+    }
+    current3 = []
     render();
   }
+  if (totalClicks == number) {
+    $('#counter').text(`Voting Over, View Results`);
+  }
   console.log(totalClicks);
-});
+}));
 
-// if(totalClicks === number) {
-//   $('#counter').
-// }
 
+$('#img2').on('click', (function(event) {
+  if (totalClicks < number){
+    totalClicks++;
+    $('#counter').text(`Round ${totalClicks + 1}`);
+    let imgChoice = event.target.name;
+    conImages.forEach(function(img) {
+      if (img.name === imgChoice) {
+        img.clicks++;
+      }
+    });
+    prev3 = []
+    for(let i = 0; i < current3.length; i++){
+      prev3.push(current3[i])
+    current3 = []
+    render();
+    }
+  if (totalClicks == number) {
+    $('#counter').text(`Voting Over, View Results`);
+  }
+  console.log(totalClicks);
+}}));
+
+
+$('#img3').on('click', (function(event) {
+  if (totalClicks < number){
+    totalClicks++;
+  $('#counter').text(`Round ${totalClicks + 1}`);
+    let imgChoice = event.target.name;
+    conImages.forEach(function(img) {
+      if (img.name === imgChoice) {
+        img.clicks++;
+      }
+    });
+    prev3 = []
+    for(let i = 0; i < current3.length; i++){
+      prev3.push(current3[i])
+    }
+    current3 = []
+    render();
+  if (totalClicks == number) {
+    $('#counter').text(`Voting Over, View Results`);
+  }
+  console.log(totalClicks);
+}}));
+
+let clickData = []
+let viewData = []
+let nameData = []
 
 $('#results').click(function(event) {
   console.log(event);
-  if (totalClicks > number) {
-    for(let i = 0; i < conImages.length; i++)
-      $('#listResults').append(`${conImages[i].name} had ${conImages[i].clicks} votes, and was seen ${conImages[i].timesSeen} times.<br>`);
+  if (totalClicks == number) {
+    for(let i = 0; i < conImages.length; i++) {
+      clickData.push(conImages[i].clicks);
+      viewData.push(conImages[i].timesSeen);
+      nameData.push(conImages[i].name);
+    }
+    // Creating the chart
+    new Chart($('#chart'), {
+      type: 'bar',
+      data: {
+        labels: nameData,
+        datasets: [{
+          label: 'Number of Votes',
+          data: clickData,
+          borderWidth: 1,
+        }, {
+          label: 'Number of Times Seen',
+          data: viewData,
+          borderWidth: 1,
+        }]
+      },
+      options: {
+        scales: {
+          y: {
+            beginAtZero: true
+          }
+        }
+      }
+    });
   }
 });
 
 $('#counter').text(`Round ${totalClicks + 1}`);
+
+// function checkPrevious(firstArr, secondArr) {
+//    firstArr.some(product => secondArr.includes(product));
+// };
+
