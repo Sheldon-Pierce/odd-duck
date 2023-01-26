@@ -182,23 +182,33 @@ function checkPrevious(firstArr, secondArr) {
   return firstArr.some(product => secondArr.includes(product));
 }
 
-let totals = getImages();
+let totals = [];
 const getInfoStorage = getImages();
 
 if(getInfoStorage){
+  console.log('products exist');
   state = getInfoStorage;
-} 
+  for(let i = 0; i < state.length; i++){
+    totals.push('');
+    totals[i] += state[i];
+    localStorage.setItem('Totals', totals);
+  }
+} else {
+  console.log('products do not exist');
+  state = conImages;
+}
+
 // Gets images from storage
 function getImages() {
   let stringData = localStorage.getItem('clickData');
   // console.log(stringData);
-  return JSON.parse(stringData)
+  return JSON.parse(stringData);
 }
 // save goats into storage
 function saveImages(conImages){
   let stringifiedImages = [];
   for(let i = 0; i < conImages.length; i++){
-    stringifiedImages.push(JSON.stringify(conImages[i].clicks));
+    stringifiedImages.push((conImages[i].clicks));
     // console.log(stringifiedImages);
   //stringify data and set it as something into local storage
   }
@@ -209,12 +219,12 @@ function deleteData() {
   localStorage.clear();
 }
 
-console.log(localStorage.clickData)
+console.log(localStorage.clickData);
 
 
 $('#reload').click(function(){
-  window.location.reload()
-})
+  window.location.reload();
+});
 
 $('#delete').click(function(){
   deleteData();

@@ -34,7 +34,6 @@ main {
     margin-top: 50px;
     grid-column: 2/3;
     width: 100%;
-    
 }
 
 #title {
@@ -58,4 +57,10 @@ main {
 #listResults {
     grid-column: 2/3;
     padding-bottom: 10px;
+}
+
+#delete {
+    background-color: red;
+    border-radius: 25px;
+    font-weight: 700;
 }
